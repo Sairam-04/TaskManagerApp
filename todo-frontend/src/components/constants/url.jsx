@@ -1,0 +1,1 @@
+export const endpoint = "https://task-buddy-9ein.onrender.com/api/v1";
