@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import postService from "../../services/postService";
-import { getUser, setUser } from "../../utils/localStorage";
-import { endpoint } from "../constants/url";
-import { signUpGoogle } from "../../api";
-import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
+import { getUser, setUser } from "../../utils/localStorage";
 import { registerUser } from "../../features/user/slice";
 import GoogleSignIn from "./GoogleSignIn";
 
@@ -14,10 +10,11 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!(getUser() === null)) {
+    if (getUser() !== null) {
       navigate("/home");
     }
-  }, []);
+  }, [navigate]);
+
   const [userData, setUserData] = useState({
     firstName: "",
     email: "",
@@ -34,27 +31,27 @@ const SignUp = () => {
       [name]: value,
     }));
   };
+
   const status = useSelector((state) => state.users.registerData.status);
   const error_data = useSelector((state) => state.users.registerData.error);
   const data = useSelector((state) => state.users.registerData.data);
 
   const validateSignUp = (values) => {
     const errors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!values.firstName) {
       errors.firstName = "FirstName is Required";
     } else if (values.firstName.length < 3) {
-      errors.name = "Name Should have atleast 3 characters";
+      errors.firstName = "FirstName Should have at least 3 characters";
     } else if (!/^[a-zA-Z\s]*$/.test(values.firstName)) {
-      errors.name = "Name must contain only letters and spaces";
+      errors.firstName = "FirstName must contain only letters and spaces";
     }
 
     if (!values.lastName) {
       errors.lastName = "LastName is Required";
     } else if (values.lastName.length < 3) {
-      errors.name = "LastName Should have atleast 3 characters";
+      errors.lastName = "LastName Should have at least 3 characters";
     } else if (!/^[a-zA-Z\s]*$/.test(values.lastName)) {
-      errors.name = "LastName must contain only letters and spaces";
+      errors.lastName = "LastName must contain only letters and spaces";
     }
 
     if (!values.email) {
@@ -62,10 +59,11 @@ const SignUp = () => {
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
       errors.email = "Invalid email address";
     }
+
     if (!values.password) {
       errors.password = "Password is Required";
     } else if (values.password.length < 8) {
-      errors.password = "Password should contain atleast 8 characters";
+      errors.password = "Password should contain at least 8 characters";
     }
 
     return errors;
@@ -84,14 +82,13 @@ const SignUp = () => {
     if (status === "idle" && data && data.success) {
       setUser(data.token);
       navigate("/home");
+    } else if (status === "failed") {
+      console.error(error_data); // Log error for debugging
     }
-    if (error_data && error_data === "Network Error") {
-      console.log("500");
-    }
-  }, [status, data, error_data]);
+  }, [status, data, error_data, navigate]);
 
   return (
-    <div className="containerlogin w-full sm:h-[60vh] flex justify-center items-center ">
+    <div className="containerlogin w-full sm:h-[60vh] flex justify-center items-center">
       <div className="content sm:w-2/5 w-[95%] mx-auto p-4 rounded-lg shadow-2xl bg-gray-100">
         <form
           onSubmit={onSignUpSubmit}
@@ -101,7 +98,7 @@ const SignUp = () => {
           <div className="flex w-full sm:flex-row flex-col gap-x-6">
             <div className="sm:w-4/5 w-full">
               <label
-                htmlFor="email"
+                htmlFor="firstName"
                 className="block mb-2 text-base font-medium text-gray-900"
               >
                 First Name
@@ -112,13 +109,12 @@ const SignUp = () => {
                 value={userData.firstName}
                 onChange={handleChange}
                 placeholder="First Name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               />
               <p className="mt-2 text-sm text-red-500">
                 {userDataErrors.firstName}
               </p>
             </div>
-
             <div className="sm:w-4/5 w-full">
               <label
                 htmlFor="lastName"
@@ -132,9 +128,11 @@ const SignUp = () => {
                 value={userData.lastName}
                 onChange={handleChange}
                 placeholder="Last Name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               />
-              <p className="mt-2 text-sm text-red-500">{userDataErrors.lastName}</p>
+              <p className="mt-2 text-sm text-red-500">
+                {userDataErrors.lastName}
+              </p>
             </div>
           </div>
           <div className="flex sm:flex-row flex-col w-full gap-x-6">
@@ -151,11 +149,9 @@ const SignUp = () => {
                 value={userData.email}
                 onChange={handleChange}
                 placeholder="example@email.com"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               />
-              <p className="mt-2 text-sm text-red-500">
-                {userDataErrors.email}
-              </p>
+              <p className="mt-2 text-sm text-red-500">{userDataErrors.email}</p>
             </div>
             <div className="sm:w-4/5 w-full">
               <label
@@ -170,9 +166,11 @@ const SignUp = () => {
                 value={userData.password}
                 onChange={handleChange}
                 placeholder="password"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               />
-              <p className="mt-2 text-sm text-red-500">{userDataErrors.password}</p>
+              <p className="mt-2 text-sm text-red-500">
+                {userDataErrors.password}
+              </p>
             </div>
           </div>
           {status === "pending" ? (
@@ -180,12 +178,10 @@ const SignUp = () => {
           ) : (
             <div
               className={`text-red-500 text-sm ${
-                (error_data && error_data) || (data && data.message)
-                  ? ""
-                  : "hidden"
+                error_data || (data && data.message) ? "" : "hidden"
               }`}
             >
-              {(error_data && error_data) || (data && data.message)}
+              {error_data || (data && data.message)}
             </div>
           )}
           <div className="Submitbtn text-center flex flex-col gap-3">
@@ -200,7 +196,7 @@ const SignUp = () => {
             <GoogleSignIn />
           </div>
           <div className="text-center text-sm text-black">
-            Already Have an Account ?{" "}
+            Already Have an Account?{" "}
             <Link className="text-blue-700 font-semibold" to="/login">
               SignIn
             </Link>
