@@ -6,6 +6,7 @@ import EditTask from "./EditTask";
 import DeleteTask from "./DeleteTask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "./Loader";
 
 const TasksComponent = () => {
   const [todos, setTodos] = useState([]);
@@ -41,7 +42,7 @@ const TasksComponent = () => {
   }, [data]);
 
   if (status === "pending") {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (status === "rejected") {

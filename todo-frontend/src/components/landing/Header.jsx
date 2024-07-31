@@ -22,10 +22,10 @@ const Header = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  const logout = () =>{
-    removeUser()
-    navigate("/")
-  }
+  const logout = () => {
+    removeUser();
+    navigate("/");
+  };
   return (
     <>
       <div className="flex flex-col gap-10 w-full relative  text-black py-2">
@@ -71,9 +71,15 @@ const Header = () => {
               </div>
             </form>
             <div>
-              {userData && userData?.success && userData?.user?.profilePicture ? (
-                <Avatar img={userData?.user?.profilePicture} />
-              ) :(
+              {userData &&
+              userData?.success &&
+              userData?.user?.profilePicture ? (
+                <Avatar
+                  src={userData?.user?.profilePicture}
+                  size="40"
+                  round={true}
+                />
+              ) : (
                 <Avatar
                   name={
                     userData?.user?.firstName + " " + userData?.user?.lastName
@@ -84,7 +90,10 @@ const Header = () => {
               )}
             </div>
             <div className="cursor-pointer">
-              <i className="bi bi-box-arrow-right text-2xl font-bold" onClick={()=>logout()}></i>
+              <i
+                className="bi bi-box-arrow-right text-2xl font-bold"
+                onClick={() => logout()}
+              ></i>
             </div>
           </div>
         </div>
