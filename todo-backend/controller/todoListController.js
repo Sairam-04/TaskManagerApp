@@ -4,7 +4,6 @@ const User = require("../models/userModel")
 exports.getAllTodos = async (req, res, next) => {
     try {
         const user_id = req.user._id;
-        
         if (!user_id) {
             return res.status(404).json({
                 success: false,
@@ -31,6 +30,46 @@ exports.getAllTodos = async (req, res, next) => {
             todolist
         })
 
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error,
+        });
+    }
+}
+
+exports.createTodo = async (req, res, next)=>{
+    try {
+        const user_id = req.user._id;
+        if (!user_id) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not found",
+            });
+        }
+        const newTodo = req.body;
+        if(!newTodo){
+            return res.status(400).json({
+                success: false,
+                message: "Data sent is not a valid data",
+            });
+        }
+        const userTodoExists = await ToDoList.findOne({user:user_id});
+        if(userTodoExists){
+            const todo = await ToDoList.create(req.body);
+            await todo.todolist.push(newTodo);
+            todo.save();
+            return res.status(200).json({
+                success: true,
+                todo,
+            });
+        }else{
+            const todo = await ToDoList.create(req.body);
+            return res.status(200).json({
+                success: true,
+                todo,
+            });
+        }
     } catch (error) {
         return res.status(500).json({
             success: false,

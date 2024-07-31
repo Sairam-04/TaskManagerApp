@@ -1,18 +1,57 @@
+const SALT = require("../constants/constants");
 const User = require("../models/userModel");
-const bcrypt = require("bcrypt");
 const sendToken = require("../utils/jwtToken");
+
+exports.checkIsGoogleLogin = async (req, res, next) =>{
+	try{
+		if(req.body.googleAccessToken){
+			const data = await fetch(process.env.GOOGLE_AUTH_URL, {
+				headers:{
+					Authorization: `Bearer ${req.body.googleAccessToken}`
+				}
+			});
+			const json = await data.json();
+			const {given_name, family_name, email, picture} = json;
+			const user = await User.findOne({email});
+			if (!user) {
+				const result = await User.create({
+					firstName: given_name,
+					lastName: family_name,
+					email,
+					profilePicture: picture
+				})
+				sendToken(result, 200, res);
+			}
+			sendToken(user, 200, res);
+		}else{
+			return res.status(400).json({
+				success: false,
+				message: "Unable to Singin with Google",
+			});
+		}
+	}catch(error){
+		console.log(error)
+		return res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+			error
+		});
+	}
+}
+
 exports.registerUser = async (req, res, next) => {
 	try {
-		const { name,phoneNumber, email,securityQuestion, password } = req.body;
+		const { firstName, lastName, email, password } = req.body;
 		const user = new User({
-			name,
+			firstName,
 			email,
-			phoneNumber,
+			lastName,
 			password,
-			securityQuestion
 		});
-		user.password = await bcrypt.hash(user.password, 10);
-		user.securityQuestion.answer = await bcrypt.hash(user.securityQuestion.answer, 10);
+		const genHash = crypto
+          .pbkdf2Sync(password, SALT, 10000, 64, "sha512")
+          .toString("hex");
+		user.password = genHash;
 		await user.save();
 		sendToken(user, 200, res);
 	} catch (error) {
@@ -62,44 +101,44 @@ exports.loginUser = async (req, res, next) => {
 	}
 }
 
-exports.updateUser = async (req, res, next) => {
-	try {
-		const user_id = req.user._id;
-		if (!user_id) {
-			return res.status(400).json({
-				success: false,
-				message: "User Not Found"
-			})
-		}
-		const newUserData = {
-			name: req.body.name,
-			email: req.body.email,
-			phoneNumber: req.body.phoneNumber
-		}
-		const user = await User.findByIdAndUpdate(user_id, newUserData, {
-			new: true,
-			runValidators: true,
-			useFindAndModify: true
-		})
-		if(!user){
-			return res.status(200).json({
-				success: false,
-				message: "Failed to update"
-			})
-		}
-		return res.status(200).json({
-			success: true,
-			user
-		})
-	}
-	catch (err) {
-		console.log(err)
-		return res.status(500).json({
-			success: false,
-			error: err
-		})
-	}
-}
+// exports.updateUser = async (req, res, next) => {
+// 	try {
+// 		const user_id = req.user._id;
+// 		if (!user_id) {
+// 			return res.status(400).json({
+// 				success: false,
+// 				message: "User Not Found"
+// 			})
+// 		}
+// 		const newUserData = {
+// 			name: req.body.name,
+// 			email: req.body.email,
+// 			phoneNumber: req.body.phoneNumber
+// 		}
+// 		const user = await User.findByIdAndUpdate(user_id, newUserData, {
+// 			new: true,
+// 			runValidators: true,
+// 			useFindAndModify: true
+// 		})
+// 		if(!user){
+// 			return res.status(200).json({
+// 				success: false,
+// 				message: "Failed to update"
+// 			})
+// 		}
+// 		return res.status(200).json({
+// 			success: true,
+// 			user
+// 		})
+// 	}
+// 	catch (err) {
+// 		console.log(err)
+// 		return res.status(500).json({
+// 			success: false,
+// 			error: err
+// 		})
+// 	}
+// }
 
 exports.getUser = async (req, res, next) =>{
 	try{
@@ -123,49 +162,49 @@ exports.getUser = async (req, res, next) =>{
 	}
 }
 
-exports.resetPassword = async (req, res, next) =>{
-	try{
-		const user_id = req.user._id;
-		if(!user_id){
-			return res.status(400).json({
-				success: false,
-				message: "User Not Found"
-			})
-		}
-		const user = await User.findById(user_id);
-		if(!user){
-			return res.status(400).json({
-				success: false,
-				message: "User does not exists"
-			})
-		}
-		const {answer} = req.body;
-		const isAnswerMatched = await user.compareAnswer(answer);
-		if(!isAnswerMatched){
-			return res.status(200).json({
-				success: false,
-				message: "Security Answer is not matched"
-			})
-		}
-		const {newPassword} = req.body;
-		if(newPassword.length <8){
-			return res.status(200).json({
-				success: false,
-				message:"Password Length should be greater than or equal to 8 characters"
-			})
-		}
-		user.password = await bcrypt.hash(newPassword, 10);
-		user.save();
+// exports.resetPassword = async (req, res, next) =>{
+// 	try{
+// 		const user_id = req.user._id;
+// 		if(!user_id){
+// 			return res.status(400).json({
+// 				success: false,
+// 				message: "User Not Found"
+// 			})
+// 		}
+// 		const user = await User.findById(user_id);
+// 		if(!user){
+// 			return res.status(400).json({
+// 				success: false,
+// 				message: "User does not exists"
+// 			})
+// 		}
+// 		const {answer} = req.body;
+// 		const isAnswerMatched = await user.compareAnswer(answer);
+// 		if(!isAnswerMatched){
+// 			return res.status(200).json({
+// 				success: false,
+// 				message: "Security Answer is not matched"
+// 			})
+// 		}
+// 		const {newPassword} = req.body;
+// 		if(newPassword.length <8){
+// 			return res.status(200).json({
+// 				success: false,
+// 				message:"Password Length should be greater than or equal to 8 characters"
+// 			})
+// 		}
+// 		user.password = await bcrypt.hash(newPassword, 10);
+// 		user.save();
 
-		return res.status(200).json({
-			success: true,
-			message:"Password Saved Successfully"
-		})
-	}catch(err){
-		console.log(err)
-		return res.status(500).json({
-			success: false,
-			error: err
-		})
-	}
-}
+// 		return res.status(200).json({
+// 			success: true,
+// 			message:"Password Saved Successfully"
+// 		})
+// 	}catch(err){
+// 		console.log(err)
+// 		return res.status(500).json({
+// 			success: false,
+// 			error: err
+// 		})
+// 	}
+// }

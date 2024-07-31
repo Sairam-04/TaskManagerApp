@@ -4,17 +4,12 @@ import { endpoint } from "../constants/url";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
-    const todayDate = new Date();
+const CreateTaskForm = ({ taskFormOpen, createTask}) => {
     const [taskData, setTaskData] = useState({
         title: "",
         desc: "",
-        startDate: "",
-        endDate: "",
         tags: [],
-        isStarred: false
     })
-    const [isSubmit, setIsSubmit] = useState(false);
     const [tag, setTag] = useState("");
     const [tagsList, setTagsList] = useState([])
 
@@ -29,15 +24,6 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
         if (!values.desc) {
             errors.desc = "Description is Required";
         }
-        if (!values.startDate) {
-            errors.startDate = "Start Date is Required";
-        }
-
-        if (!values.endDate) {
-            errors.endDate = "End Date is Required";
-        } else if (new Date(values.endDate) < new Date(values.startDate)) {
-            errors.endDate = "End Date must be greater than the Start Date";
-        }
         return errors;
     }
 
@@ -51,7 +37,6 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
 
     const SubmitTask = () => {
         setTaskErrors(validateTaskForm(taskData));
-        setIsSubmit(true);
         // createTaskClick();
     }
     const handleKeyDown = (e) => {
@@ -76,45 +61,6 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
         setTagsList(newarr);
     }
 
-    const createNewTask = async () => {
-        try {
-            const updatedTaskData = { ...taskData, tags: tagsList };
-            const url = newFlag ? `${endpoint}/new-todo` : `${endpoint}/add-todo`;
-            const DATA = newFlag ? {
-                todolist: [
-                    updatedTaskData
-                ]
-            } : updatedTaskData;
-            const response = await postService(
-                url,
-                DATA,
-                true
-            );
-            if (response) {
-                if (response?.data?.success) {
-                    toast.success(`Created A Task - ${updatedTaskData?.title}`);
-                    if (flag) {
-                        showForm();
-                    }
-                    createTaskClick();
-                } else {
-                    toast.warning("Something Went Wrong Task is not created")
-                }
-            } else {
-                toast.error("Something Went Wrong");
-            }
-        } catch (error) {
-            toast.error("Something Went Wrong");
-
-        }
-    }
-
-    useEffect(() => {
-        if (Object.keys(taskErrors).length === 0 && isSubmit) {
-            createNewTask();
-        }
-    }, [isSubmit, taskErrors]);
-
     return (
         <>
 
@@ -125,11 +71,8 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
                         <div className="flex items-center justify-between p-3 border-b border-solid border-blueGray-200 rounded-t text-white">
                             <h3 className="text-xl font-semibold">Create Task</h3>
                             <button
+                                onClick = {()=>taskFormOpen()}
                                 className="bg-none p-1 ml-auto border-0 text-red-600 float-right text-2xl leading-none font-semibold hover:bg-red-600 hover:text-white hover:px-1 hover:rounded-md"
-                                onClick={() => {
-                                    showForm()
-                                    createTaskClick()
-                                }}
                             >
                                 X
                             </button>
@@ -163,35 +106,6 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
                                         Desc
                                     </label>
                                     <p className="text-xs text-red-600 mt-[-5px]">{taskErrors.desc}</p>
-                                </div>
-                                <div className="relative h-11 w-full min-w-[200px]">
-                                    <input
-                                        name="startDate"
-                                        value={taskData.startDate}
-                                        placeholder="Title"
-                                        onChange={handleChange}
-                                        type="Date"
-                                        className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
-                                    />
-                                    <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                                        Start Date
-                                    </label>
-                                    <p className="text-xs text-red-600 mb-3">{taskErrors.startDate}</p>
-
-                                </div>
-                                <div className="relative h-11 w-full min-w-[200px]">
-                                    <input
-                                        name="endDate"
-                                        value={taskData.endDate}
-                                        placeholder="Title"
-                                        onChange={handleChange}
-                                        type="Date"
-                                        className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
-                                    />
-                                    <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                                        End Date
-                                    </label>
-                                    <p className="text-xs text-red-600">{taskErrors.endDate}</p>
                                 </div>
 
                                 <div className="tags flex flex-col gap-5">
@@ -235,7 +149,7 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
                             <button
                                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                 type="button"
-                                onClick={() => SubmitTask()}
+                                // onClick={() => SubmitTask()}
                             >
                                 Submit
                             </button>

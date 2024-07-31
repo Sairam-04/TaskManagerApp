@@ -17,7 +17,7 @@ const Header = () => {
       );
       if (response) {
         if (response?.data?.success) {
-          setInitial(response.data?.user?.name);
+          setInitial(response.data?.user?.firstName);
         } else {
           toast.error("Something Went Wrong");
         }

@@ -12,38 +12,34 @@ const UserLoginComponent = () => {
     }
   }, []);
   return (
-    <div className="flex flex-col gap-10 w-full h-screen bg-[#1B1D21] text-white py-2">
-      <div className="logo flex gap-3 items-center px-3">
-        <img src={logo} className="h-10 w-100" alt="Logo"></img>
-        <div className="text-xl text-white font-medium"> Task Buddy </div>
-      </div>
-      <div className="containerlogin w-full h-[80vh] flex justify-center items-center">
-        <div className="content w-1/2 bg-[#2A2D33] mx-auto p-4 rounded-lg backdrop-filter">
-          <div className="btns flex justify-between">
-            <Link
-              to="/login"
-              className={`w-1/2 text-center ${
-                location.pathname === "/" || location.pathname === "/login"
-                  ? "bg-[#7864F4] py-1 px-1 rounded-md text-white"
-                  : ""
-              }`}
-            >
-              Login
-            </Link>
-            <Link
-              className={`w-1/2 text-center ${
-                location.pathname === "/register"
-                  ? "bg-[#7864F4] py-1 px-1 rounded-md text-white"
-                  : ""
-              }`}
-              to="/register"
-            >
-              SignUp
-            </Link>
-          </div>
-          <Outlet />
+    <div className="flex flex-col gap-10 w-full h-screen relative  text-black py-2">
+      <div
+        className="absolute w-full 
+                    bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
+                    top-0 left-0 h-screen opacity-50 filter blur-3xl -z-50"
+      ></div>
+      <div className="flex justify-between px-2 py-1 items-center">
+        <div className="logo flex gap-3 items-center px-3">
+          <img src={logo} className="h-10 w-100" alt="Logo"></img>
+          <div className="text-xl text-black font-medium"> Task Manager </div>
+        </div>
+        <div className="flex gap-6 items-center">
+          <Link
+            to="/login"
+            className="bg-gray-200/30 shadow-lg px-5 py-2 rounded-lg text-lg font-semibold hover:scale-105 hover:bg-gray-200"
+
+          >
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="bg-gray-200/30 shadow-lg px-5 py-2 rounded-lg text-lg font-semibold hover:scale-105 hover:bg-gray-200"
+          >
+            SignUp
+          </Link>
         </div>
       </div>
+      <Outlet />
     </div>
   );
 };

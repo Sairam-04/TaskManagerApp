@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const status = ["todo", "inprogress", "completed"]
+
 const toDoList = mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
@@ -17,25 +19,14 @@ const toDoList = mongoose.Schema({
                 type: String,
                 default:""
             },
-            isCompleted:{
-                type: Boolean,
-                default: false
+            status:{
+                type: String,
+                required: true,
+                enum: status
             },
             createdAt:{
                 type: Date,
                 default: Date.now
-            },
-            startDate:{
-                type: Date,
-                required: true
-            },
-            endDate:{
-                type: Date,
-                required: true
-            },
-            isStarred: {
-                type: Boolean,
-                default: false
             },
             tags:[]
         }
