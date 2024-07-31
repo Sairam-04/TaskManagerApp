@@ -1,13 +1,13 @@
 const setUser = (token) =>{
-    localStorage.setItem('token',token);
+    localStorage.setItem('x-auth-token',token);
 }
 
 const getUser = () =>{
-    return localStorage.getItem('token');
+    return localStorage.getItem('x-auth-token');
 }
 
 const removeUser = ()=>{
-    localStorage.removeItem('token');
+    localStorage.removeItem('x-auth-token');
 }
 
 export {setUser, getUser, removeUser};

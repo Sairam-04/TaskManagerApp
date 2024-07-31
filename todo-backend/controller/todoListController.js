@@ -56,14 +56,14 @@ exports.createTodo = async (req, res, next)=>{
         }
         const userTodoExists = await ToDoList.findOne({user:user_id});
         if(userTodoExists){
-            const todo = await ToDoList.create(req.body);
-            await todo.todolist.push(newTodo);
-            todo.save();
+            await userTodoExists.todolist.push(newTodo?.todolist[0]);
+            await userTodoExists.save();
             return res.status(200).json({
                 success: true,
-                todo,
+                todo: userTodoExists,
             });
         }else{
+            req.body.user = user_id;
             const todo = await ToDoList.create(req.body);
             return res.status(200).json({
                 success: true,
@@ -71,6 +71,7 @@ exports.createTodo = async (req, res, next)=>{
             });
         }
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             success: false,
             error: error,

@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTodo } from "../../features/task/slice";
+import { createTodo, editTodo } from "../../features/task/slice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CreateTaskForm = ({ taskFormOpen }) => {
-  const [taskData, setTaskData] = useState({
-    title: "",
-    desc: "",
-    tags: [],
-    status: "todo",
-  });
+const EditTask = ({ task, editTaskForm }) => {
+  const [taskData, setTaskData] = useState(task);
   const [tag, setTag] = useState("");
-  const [tagsList, setTagsList] = useState([]);
+  const [tagsList, setTagsList] = useState(task.tags || []);
   const [taskErrors, setTaskErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
@@ -21,11 +16,9 @@ const CreateTaskForm = ({ taskFormOpen }) => {
   const { data, status, error } = useSelector((state) => state.todos);
 
   useEffect(() => {
-    
     if (status === "rejected" && error) {
       setApiError(error);
       console.log(error);
-      
     }
   }, [status, error]);
 
@@ -57,26 +50,18 @@ const CreateTaskForm = ({ taskFormOpen }) => {
 
     if (!Object.keys(errors).length) {
       setLoading(true);
-      dispatch(createTodo(taskData))
-        .then(() => {
-          setLoading(false);
-          taskFormOpen();
-
-          console.log("sssssss");
-          setTaskData({
-            title: "",
-            desc: "",
-            tags: [],
-            status: "todo",
-          });
-          setTagsList([]);
-        })
-        .catch((err) => {
-          setLoading(false);
-          setApiError(
-            err.message || "An error occurred while creating the task."
-          );
-        });
+      editTaskForm();
+      console.log(taskData);
+      dispatch(editTodo(taskData));
+      setLoading(false);
+      setTaskData({
+        title: "",
+        desc: "",
+        tags: [],
+        status: "todo",
+      });
+      setTagsList([]);
+      editTaskForm();
     }
   };
 
@@ -112,16 +97,17 @@ const CreateTaskForm = ({ taskFormOpen }) => {
           >
             <div className="flex items-center justify-between p-3 border-b border-solid border-blueGray-200 rounded-t text-black">
               <h3 className="text-xl font-semibold">Create Task</h3>
-              <button
-                onClick={() => taskFormOpen()}
+              <div
+                onClick={() => editTaskForm()}
+                type="button"
                 className="bg-none p-1 ml-auto border-0 text-red-600 float-right text-2xl leading-none font-semibold hover:bg-red-600 hover:text-white hover:px-1 hover:rounded-md"
               >
                 X
-              </button>
+              </div>
             </div>
             <div className="relative p-6 flex-auto h-[60vh] overflow-y-auto">
               <div className="flex flex-col gap-3">
-                <div className="w-4/5">
+                <div className="w-4/5 text-left">
                   <label
                     htmlFor="title"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -140,7 +126,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                     {taskErrors.title}
                   </p>
                 </div>
-                <div className="w-4/5">
+                <div className="w-4/5 text-left">
                   <label
                     htmlFor="desc"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -156,7 +142,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                   />
                   <p className="mt-2 text-sm text-red-500">{taskErrors.desc}</p>
                 </div>
-                <div className="w-4/5">
+                <div className="w-4/5 text-left">
                   <label
                     htmlFor="status"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -178,7 +164,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                   </p>
                 </div>
 
-                <div className="tags flex flex-col gap-5">
+                <div className="tags flex flex-col gap-5 text-left">
                   {tagsList && tagsList.length > 0 && (
                     <div className="flex flex-wrap w-full h-auto border border-blue-400 p-2 gap-1">
                       {tagsList.map((ele, ind) => (
@@ -257,4 +243,4 @@ const CreateTaskForm = ({ taskFormOpen }) => {
   );
 };
 
-export default CreateTaskForm;
+export default EditTask;

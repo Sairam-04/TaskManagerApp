@@ -1,80 +1,83 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { endpoint } from '../constants/url';
-import getService from '../../services/getService';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { endpoint } from "../constants/url";
+import getService from "../../services/getService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import logo from "../../assets/Logo.svg";
+import Avatar from "react-avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../../utils/localStorage";
+import { fetchUser } from "../../features/user/slice";
 
 const Header = () => {
-  const location = useLocation();
-  const [title, setTitle] = useState('');
-  const [initial, setInitial] = useState('');
-  const getUserDetails = async () => {
-    try {
-      const response = await getService(
-        `${endpoint}/me`,
-        true
-      );
-      if (response) {
-        if (response?.data?.success) {
-          setInitial(response.data?.user?.firstName);
-        } else {
-          toast.error("Something Went Wrong");
-        }
-      } else {
-        toast.error("Something Went Wrong");
-      }
-    } catch (err) {
-      toast.error("Something Went Wrong");
-    }
-  }
-  useEffect(() => {
-    if (location.pathname === '/home') {
-      setTitle('Home');
-    } else if (location.pathname.includes('/my-tasks')) {
-      setTitle('My Tasks');
-    } else if (location.pathname.includes('/starred')) {
-      setTitle('Starred');
-    } else if (location.pathname.includes('/settings')) {
-      setTitle('Settings');
-    } else {
-      setTitle('Home');
-    }
-    getUserDetails();
-  }, [location.pathname]);
+  const dispatch = useDispatch();
+  const token = getUser();
+  const userData = useSelector((state) => state.users.fetchUserData.data);
+  const status = useSelector((state) => state.users.fetchUserData.status);
+  const error_data = useSelector((state) => state.users.fetchUserData.error);
 
+  useEffect(()=>{
+      dispatch(fetchUser())
+      
+  }, [dispatch]);
   return (
     <>
-      <div className='header bg-[#2A2D33] flex justify-between items-center h-[9.5vh] px-5 py-2 border-b-[1px] border-[#6C717B] sticky top-0'>
-        <div className='navleft text-2xl font-bold'>
-          {title}
-        </div>
-        <div className='navright flex gap-3 items-center'>
-          <div className="relative text-gray-600 focus-within:text-gray-400">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-              <button type="submit" className="p-1 focus:outline-none focus:shadow-outline">
-                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-6 h-6"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              </button>
-            </span>
-            <input type="search" name="q" className="py-2 text-sm text-white bg-[#2A2D33] rounded-2xl pl-10 focus:outline-none focus:bg-[#2A2D33] focus:text-white border border-[#6C717B]" placeholder="Search..." />
+      <div className="flex flex-col gap-10 w-full relative  text-black py-2">
+        <div
+          className="absolute w-full 
+                    bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
+                    top-0 left-0 h-screen opacity-50 filter blur-3xl -z-50"
+        ></div>
+        <div className="flex justify-between px-2 py-1 items-center">
+          <div className="logo flex gap-3 items-center px-3">
+            <img src={logo} className="h-10 w-100" alt="Logo"></img>
+            <div className="text-xl text-black font-medium"> Task Manager </div>
           </div>
-          <div className='notifications'>
-            <i className="bi bi-bell-fill text-xl"></i>
-          </div>
-          <div className="avatar placeholder cursor-pointer">
-            <div className="bg-white text-black rounded-full w-8 h-8 flex justify-center items-center">
-              <span className="text-xl font-bold">
-                {
-                  initial[0] || "NA"
-                }
-              </span>
+          <div className="flex gap-6 items-center">
+            <form className="max-w-md mx-auto">
+              <div className="relative flex items-center w-full h-10 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
+                <div className="grid place-items-center h-full w-12 text-gray-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+
+                <input
+                  className="h-full w-full outline-none text-sm text-gray-700 pr-2"
+                  type="text"
+                  id="search"
+                  placeholder="Search"
+                />
+              </div>
+            </form>
+            <div>
+              {
+                userData && userData?.success && (
+                  <Avatar name={userData?.user?.firstName + " " +userData?.user?.lastName} size="40" round={true} />
+                  // userData?.user?.profilePicture ? <Avatar img={userData?.user?.profilePicture} size="40" round={true} />
+                  // : <Avatar name={userData?.user?.firstName} size="40" textSizeRatio={2} round={true} />
+
+                )
+              }
             </div>
           </div>
         </div>
       </div>
       <ToastContainer />
     </>
-  )
-}
+  );
+};
 
 export default Header;

@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
-import DisplayTasks from "./DisplayTasks";
 import CreateTaskForm from "./ShowModal";
 import { endpoint } from "../constants/url";
 import getService from "../../services/getService";
-// import HomeTasksComponent from "./HomeTasksComponent";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import deleteService from "../../services/deleteService";
 import putService from "../../services/putService";
 import Loader from "./Loader";
-import TasksList from "./TasksList";
 
 const HomeComponent = () => {
-  const [createTask, setCreateTask] = useState(false);
-  const taskFormOpen = () =>{
-    setCreateTask(!createTask)
-  } 
   return (
     <>
       <div className="homecomponent py-5 flex flex-col gap-3">
@@ -35,9 +28,7 @@ const HomeComponent = () => {
           </div>
         </div>
         <TasksList />
-        {
-          createTask && <CreateTaskForm createTask={createTask} taskFormOpen={taskFormOpen} />
-        }
+        
         <ToastContainer />
       </div>
     </>

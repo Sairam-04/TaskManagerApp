@@ -45,9 +45,9 @@ export const registerUser = createAsyncThunk(
 
 export const fetchUser = createAsyncThunk(
   "users/fetchUser",
-  async (data, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await userService.GetUserDetails(data);
+      const response = await userService.GetUserDetails();
       return response.data;
     } catch (error) {
       return rejectWithValue(error?.response?.data?.message || error?.message);
@@ -55,7 +55,7 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
@@ -74,9 +74,7 @@ export const userSlice = createSlice({
         state.loginData.status = "rejected";
         state.loginData.error = action.payload;
         state.loginData.data = [];
-      });
-
-    builder
+      })
       .addCase(registerUser.pending, (state) => {
         state.registerData.status = "pending";
         state.registerData.error = "";
@@ -90,9 +88,7 @@ export const userSlice = createSlice({
         state.registerData.status = "rejected";
         state.registerData.error = action.payload;
         state.registerData.data = [];
-      });
-
-    builder
+      })
       .addCase(fetchUser.pending, (state) => {
         state.fetchUserData.status = "pending";
         state.fetchUserData.error = "";
@@ -110,6 +106,4 @@ export const userSlice = createSlice({
   },
 });
 
-
-export const {} = userSlice.actions;
 export default userSlice.reducer;
