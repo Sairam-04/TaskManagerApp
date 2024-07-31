@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const status = ["todo", "inprogress", "completed"]
+const status = ["todo", "inprogress", "done"]
 
 const toDoList = mongoose.Schema({
     user: {

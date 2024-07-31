@@ -91,15 +91,15 @@ const SignUp = () => {
   }, [status, data, error_data]);
 
   return (
-    <div className="containerlogin w-full h-[60vh] flex justify-center items-center ">
-      <div className="content w-2/5 mx-auto p-4 rounded-lg shadow-2xl bg-gray-100">
+    <div className="containerlogin w-full sm:h-[60vh] flex justify-center items-center ">
+      <div className="content sm:w-2/5 w-[95%] mx-auto p-4 rounded-lg shadow-2xl bg-gray-100">
         <form
           onSubmit={onSignUpSubmit}
           className="login flex flex-col items-center w-full p-2 gap-6 py-5"
         >
           <div className="text-center text-3xl font-semibold">SignUp</div>
-          <div className="flex w-full gap-x-6">
-            <div className="w-4/5">
+          <div className="flex w-full sm:flex-row flex-col gap-x-6">
+            <div className="sm:w-4/5 w-full">
               <label
                 htmlFor="email"
                 className="block mb-2 text-base font-medium text-gray-900"
@@ -119,7 +119,7 @@ const SignUp = () => {
               </p>
             </div>
 
-            <div className="w-4/5">
+            <div className="sm:w-4/5 w-full">
               <label
                 htmlFor="lastName"
                 className="block mb-2 text-base font-medium text-gray-900"
@@ -137,8 +137,8 @@ const SignUp = () => {
               <p className="mt-2 text-sm text-red-500">{userDataErrors.lastName}</p>
             </div>
           </div>
-          <div className="flex w-full gap-x-6">
-            <div className="w-4/5">
+          <div className="flex sm:flex-row flex-col w-full gap-x-6">
+            <div className="sm:w-4/5 w-full">
               <label
                 htmlFor="email"
                 className="block mb-2 text-base font-medium text-gray-900"
@@ -157,7 +157,7 @@ const SignUp = () => {
                 {userDataErrors.email}
               </p>
             </div>
-            <div className="w-4/5">
+            <div className="sm:w-4/5 w-full">
               <label
                 htmlFor="password"
                 className="block mb-2 text-base font-medium text-gray-900"

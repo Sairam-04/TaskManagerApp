@@ -1,6 +1,7 @@
 const SALT = require("../constants/constants");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
+const crypto = require("crypto")
 
 exports.checkIsGoogleLogin = async (req, res, next) =>{
 	try{
@@ -94,6 +95,7 @@ exports.loginUser = async (req, res, next) => {
 		}
 		sendToken(user, 200, res);
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({
 			success: false,
 			message: "Internal Server Error"

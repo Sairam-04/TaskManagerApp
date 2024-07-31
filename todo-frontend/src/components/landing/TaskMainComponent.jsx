@@ -12,6 +12,7 @@ const TaskMainComponent = () => {
   const taskFormOpen = () =>{
     setCreateTask(!createTask)
   } 
+  
   useEffect(() => {
     if (getUser() === null) {
       navigate("/login");
@@ -19,11 +20,11 @@ const TaskMainComponent = () => {
   }, []);
   return (
     <>
-      <div className="maincomponent w-full h-screen flex flex-col text-black overflow-hidden font-poppins">
+      <div className="maincomponent w-full sm:h-screen flex flex-col text-black overflow-hidden font-poppins">
         <Header />
 
-        <div className="w-[80%] mx-auto">
-          <div className="flex">
+        <div className="sm:w-[80%] w-[95%] mx-auto">
+          <div className="flex sm:justify-start">
           <button className="text-black bg-slate-100 rounded-md shadow-xl py-2 px-5"
             onClick={()=>taskFormOpen()}
           >Create Task</button>

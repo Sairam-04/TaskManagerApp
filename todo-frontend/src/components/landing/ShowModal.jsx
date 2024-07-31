@@ -59,10 +59,12 @@ const CreateTaskForm = ({ taskFormOpen }) => {
       setLoading(true);
       dispatch(createTodo(taskData))
         .then(() => {
+
+          toast.success(`Task "${taskData.title}" is Created`);
+      
           setLoading(false);
           taskFormOpen();
 
-          console.log("sssssss");
           setTaskData({
             title: "",
             desc: "",
@@ -76,6 +78,8 @@ const CreateTaskForm = ({ taskFormOpen }) => {
           setApiError(
             err.message || "An error occurred while creating the task."
           );
+          toast.error(`Unable to Create task`);
+
         });
     }
   };
@@ -105,7 +109,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-[40%] my-6 mx-auto max-w-3xl">
+        <div className="relative sm:w-[40%] w-[95%] my-6 mx-auto max-w-3xl">
           <form
             onSubmit={SubmitTask}
             className="border-0 relative flex flex-col w-full rounded-lg shadow-2xl bg-gray-100 outline-none focus:outline-none"
@@ -121,7 +125,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
             </div>
             <div className="relative p-6 flex-auto h-[60vh] overflow-y-auto">
               <div className="flex flex-col gap-3">
-                <div className="w-4/5">
+                <div className="sm:w-4/5 w-full">
                   <label
                     htmlFor="title"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -140,7 +144,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                     {taskErrors.title}
                   </p>
                 </div>
-                <div className="w-4/5">
+                <div className="sm:w-4/5 w-full">
                   <label
                     htmlFor="desc"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -156,7 +160,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                   />
                   <p className="mt-2 text-sm text-red-500">{taskErrors.desc}</p>
                 </div>
-                <div className="w-4/5">
+                <div className="sm:w-4/5 w-full">
                   <label
                     htmlFor="status"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -197,7 +201,7 @@ const CreateTaskForm = ({ taskFormOpen }) => {
                       ))}
                     </div>
                   )}
-                  <div className="w-4/5">
+                  <div className="sm:w-4/5 w-full">
                     <label
                       htmlFor="tag"
                       className="block mb-2 text-base font-medium text-gray-900"
@@ -252,7 +256,6 @@ const CreateTaskForm = ({ taskFormOpen }) => {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer />
     </>
   );
 };

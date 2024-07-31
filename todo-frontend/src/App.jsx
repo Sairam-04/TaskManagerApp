@@ -1,10 +1,10 @@
 import { useState } from "react";
 import TaskMainComponent from "./components/landing/TaskMainComponent";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomeComponent from "./components/landing/HomeComponent";
 import UserLoginComponent from "./components/login-signup/UserLoginComponent";
 import Login from "./components/login-signup/Login";
 import SignUp from "./components/login-signup/SignUp";
+import TasksComponent from "./components/landing/TasksComponent";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           </Route>
 
           <Route path="/home" element={<TaskMainComponent />}>
-            <Route index element={<HomeComponent />}></Route>
+            <Route index element={<TasksComponent />}></Route>
           </Route>
         </Routes>
       </Router>

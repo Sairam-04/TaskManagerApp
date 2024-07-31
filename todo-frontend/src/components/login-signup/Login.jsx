@@ -64,14 +64,14 @@ const Login = () => {
     }
   }, [status, data, error_data]);
   return (
-    <div className="containerlogin w-full h-[60vh] flex justify-center items-center ">
-      <div className="content w-[30%] max-w-[40%] mx-auto p-4 rounded-lg shadow-2xl bg-gray-100">
+    <div className="containerlogin w-full sm:h-[60vh] flex justify-center items-center ">
+      <div className="content sm:w-[30%] w-[95%] mx-auto p-4 rounded-lg shadow-2xl bg-gray-100">
         <form
           onSubmit={onLoginSubmit}
           className="login flex flex-col items-center w-full p-2 gap-6 py-5"
         >
           <div className="text-center text-3xl font-semibold">Login</div>
-          <div className="w-4/5">
+          <div className="sm:w-4/5 w-full">
             <label
               htmlFor="email"
               className="block mb-2 text-base font-medium text-gray-900"
@@ -88,7 +88,7 @@ const Login = () => {
             />
             <p className="mt-2 text-sm text-red-500">{loginErrors.email}</p>
           </div>
-          <div className="w-4/5">
+          <div className="sm:w-4/5 w-full">
             <label
               htmlFor="email"
               class="block mb-2 text-base font-medium text-gray-900"

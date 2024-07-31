@@ -16,7 +16,7 @@ const UserLoginComponent = () => {
       <div
         className="absolute w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 top-0 left-0 h-screen opacity-50 filter blur-3xl -z-50"
       ></div>
-      <div className="flex justify-between px-2 py-1 items-center">
+      <div className="flex sm:flex-row flex-col sm:gap-0 gap-4 justify-between px-2 py-1 items-center">
         <div className="logo flex gap-3 items-center px-3">
           <img src={logo} className="h-10 w-100" alt="Logo"></img>
           <div className="text-xl text-black font-medium"> Task Manager </div>

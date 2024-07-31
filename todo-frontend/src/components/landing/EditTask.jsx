@@ -52,16 +52,25 @@ const EditTask = ({ task, editTaskForm }) => {
       setLoading(true);
       editTaskForm();
       console.log(taskData);
-      dispatch(editTodo(taskData));
-      setLoading(false);
-      setTaskData({
-        title: "",
-        desc: "",
-        tags: [],
-        status: "todo",
-      });
-      setTagsList([]);
-      editTaskForm();
+      dispatch(editTodo(taskData))
+        .unwrap()
+        .then(() => {
+          toast.success(
+            `Task "${taskData.title}" is Updated`
+          );
+          setLoading(false);
+          setTaskData({
+            title: "",
+            desc: "",
+            tags: [],
+            status: "todo",
+          });
+          setTagsList([]);
+          editTaskForm();
+        })
+        .catch((error) => {
+          toast.error(`Failed to update task status: ${error.message}`);
+        });
     }
   };
 
@@ -90,13 +99,13 @@ const EditTask = ({ task, editTaskForm }) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-[40%] my-6 mx-auto max-w-3xl">
+        <div className="relative sm:w-[40%] w-full my-6 mx-auto max-w-3xl">
           <form
             onSubmit={SubmitTask}
             className="border-0 relative flex flex-col w-full rounded-lg shadow-2xl bg-gray-100 outline-none focus:outline-none"
           >
             <div className="flex items-center justify-between p-3 border-b border-solid border-blueGray-200 rounded-t text-black">
-              <h3 className="text-xl font-semibold">Create Task</h3>
+              <h3 className="text-xl font-semibold">Edit Task</h3>
               <div
                 onClick={() => editTaskForm()}
                 type="button"
@@ -107,7 +116,7 @@ const EditTask = ({ task, editTaskForm }) => {
             </div>
             <div className="relative p-6 flex-auto h-[60vh] overflow-y-auto">
               <div className="flex flex-col gap-3">
-                <div className="w-4/5 text-left">
+                <div className="sm:w-4/5 w-full text-left">
                   <label
                     htmlFor="title"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -126,7 +135,7 @@ const EditTask = ({ task, editTaskForm }) => {
                     {taskErrors.title}
                   </p>
                 </div>
-                <div className="w-4/5 text-left">
+                <div className="sm:w-4/5 w-full text-left">
                   <label
                     htmlFor="desc"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -142,7 +151,7 @@ const EditTask = ({ task, editTaskForm }) => {
                   />
                   <p className="mt-2 text-sm text-red-500">{taskErrors.desc}</p>
                 </div>
-                <div className="w-4/5 text-left">
+                <div className="sm:w-4/5 w-full text-left">
                   <label
                     htmlFor="status"
                     className="block mb-2 text-base font-medium text-gray-900"
@@ -183,7 +192,7 @@ const EditTask = ({ task, editTaskForm }) => {
                       ))}
                     </div>
                   )}
-                  <div className="w-4/5">
+                  <div className="sm:w-4/5 w-full">
                     <label
                       htmlFor="tag"
                       className="block mb-2 text-base font-medium text-gray-900"
@@ -237,8 +246,7 @@ const EditTask = ({ task, editTaskForm }) => {
           </form>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer />
+      <div className="opacity-25 fixed inset-0 -z-40 bg-black"></div>
     </>
   );
 };

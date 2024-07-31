@@ -60,7 +60,6 @@ const TasksComponent = () => {
     setList(source.droppableId, sourceList);
     setList(destination.droppableId, destList);
 
-    // Dispatch action to update the status
     const updatedTask = { ...movedItem, status: destination.droppableId };
     dispatch(editTodo(updatedTask))
       .unwrap()
@@ -143,22 +142,22 @@ const TasksComponent = () => {
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex justify-between h-screen w-full py-4">
-          <div className="w-[32%] min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
-            <h2>Todo</h2>
+        <div className="flex sm:flex-row flex-col sm:justify-between sm:gap-0 gap-5 h-screen w-full py-4">
+          <div className="sm:w-[32%] w-full min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
+            <h2 className="font-semibold text-lg">Todo</h2>
             {renderList(todos, "todo")}
           </div>
-          <div className="w-[32%] min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
-            <h2>In Progress</h2>
+          <div className="sm:w-[32%] w-full min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
+            <h2 className="font-semibold text-lg">In Progress</h2>
             {renderList(inProgress, "inprogress")}
           </div>
-          <div className="w-[32%] min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
-            <h2>Done</h2>
+          <div className="sm:w-[32%] w-full min-h-10 h-fit bg-gray-500/30 rounded-md text-center">
+            <h2 className="font-semibold text-lg">Done</h2>
             {renderList(done, "done")}
           </div>
         </div>
+        <ToastContainer />
       </DragDropContext>
-      <ToastContainer />
     </>
   );
 };

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const SALT = require("../constants/constants");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -38,11 +39,9 @@ userSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
 
-userSchema.methods.compareAnswer = async function (enteredAnswer) {
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
   const checkHash = crypto
     .pbkdf2Sync(enteredPassword, SALT, 10000, 64, "sha512")
     .toString("hex");
