@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import postService from "../../services/postService";
 import { getUser, setUser } from "../../utils/localStorage";
-import { endpoint } from "../constants/url";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/user/slice";
 import GoogleSignIn from "./GoogleSignIn";
@@ -91,7 +90,7 @@ const Login = () => {
           <div className="sm:w-4/5 w-full">
             <label
               htmlFor="email"
-              class="block mb-2 text-base font-medium text-gray-900"
+              className="block mb-2 text-base font-medium text-gray-900"
             >
               Password
             </label>
@@ -101,9 +100,9 @@ const Login = () => {
               value={userData.password}
               onChange={handleChange}
               placeholder="Password"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
-            <p class="mt-2 text-sm text-red-500">{loginErrors.password}</p>
+            <p className="mt-2 text-sm text-red-500">{loginErrors.password}</p>
           </div>
           {status === "pending" ? (
             <div className="animate-spin ease-linear rounded-full w-10 h-10 border-t-2 border-b-2 border-blue-500"></div>

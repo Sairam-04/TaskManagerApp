@@ -1,6 +1,6 @@
 import axios from "axios";
-import { API_BASE_URL } from "../../constants/url";
 import { getUser } from "../../utils/localStorage";
+import { API_BASE_URL } from "../../components/constants/url";
 
 const RegisterUser = (data) =>{
     const uri = `${API_BASE_URL}/register`;

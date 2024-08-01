@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getUser } from "../../utils/localStorage";
-import { API_BASE_URL } from "../../constants/url";
+import { API_BASE_URL } from "../../components/constants/url";
 
 // Fetch all todos
 const fetchAllTodos = () => {

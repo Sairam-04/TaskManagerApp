@@ -1,7 +1,7 @@
 import axios from "axios";
-import { endpoint } from "../components/constants/url";
+import { API_BASE_URL } from "../components/constants/url";
 
-const API = axios.create({ baseURL: endpoint });
+const API = axios.create({ baseURL: API_BASE_URL });
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem("user_info")) {
