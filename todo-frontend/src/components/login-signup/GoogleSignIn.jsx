@@ -27,9 +27,9 @@ const GoogleSignIn = () => {
   const login = useGoogleLogin({ onSuccess: handleGoogleSuccess });
 
   return (
-    <>
+    <div className="flex flex-col items-center gap-2">
       {loading && (
-        <div className="animate-spin ease-linear rounded-full w-10 h-10 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="animate-spin ease-linear rounded-full w-10 h-10 border-t-2 border-b-2 border-blue-500"></div>
       )}
       <button
         type="button"
@@ -49,7 +49,7 @@ const GoogleSignIn = () => {
         </svg>
         Sign up with Google
       </button>
-    </>
+    </div>
   );
 };
 
