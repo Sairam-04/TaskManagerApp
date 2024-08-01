@@ -20,7 +20,7 @@ const TaskMainComponent = () => {
   }, []);
   return (
     <>
-      <div className="maincomponent w-full sm:h-screen flex flex-col text-black overflow-hidden font-poppins">
+      <div className="maincomponent w-full sm:h-screen overflow-y-scroll flex flex-col text-black overflow-hidden font-poppins">
         <Header />
 
         <div className="sm:w-[80%] w-[95%] mx-auto">
